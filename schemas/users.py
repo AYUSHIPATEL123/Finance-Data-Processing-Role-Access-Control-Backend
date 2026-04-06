@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 import enum
-from datetime import date
+from datetime import datetime
 from .records import RecordSchema
 
 
@@ -16,7 +16,15 @@ class UserSchema(BaseModel):
     password:str
     email:str
     role:UserRoles
-    is_active:bool
-    created_At:date
+    
 
     records:list[RecordSchema]=[]
+
+
+class UserOut(UserSchema):
+
+    id:int
+    is_active:bool
+    created_At:datetime
+    class Config:
+        from_attributes=True    
