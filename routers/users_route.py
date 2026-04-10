@@ -6,6 +6,7 @@ from models.users import User
 from database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated
+from services.service import oauth2_schema
 import hashlib
 
 
@@ -23,16 +24,14 @@ def verify_password(plan_password:str,stored_password:str) -> bool:
     hashed = hashlib.sha256(plan_password.encode()).hexdigest()
     return pwd_content.verify(hashed,stored_password)
 
+
 @router.get('/users/',response_model=list[UserOut])
-async def users(db:Annotated[AsyncSession,Depends(get_db)]):
+async def users(db:Annotated[AsyncSession,Depends(get_db)],token:Annotated[str,Depends(oauth2_schema)]):
     query = select(User)
     users = await db.execute(query)
     users = users.scalars().all()
-    
+    print(token)
     return users
-
-
-
 
 
 @router.put('/update-user/{id}',response_model=UserOut)
