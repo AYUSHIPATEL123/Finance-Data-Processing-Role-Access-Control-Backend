@@ -31,7 +31,7 @@ async def add_user(data:UserSchema,db:Annotated[AsyncSession,Depends(get_db)]):
 
 @router.post('/login/')
 async def login(data:LoginSchema,db:Annotated[AsyncSession,Depends(get_db)]):
-
+    
     query = select(User).where(User.email == data.email)
     
     user = await db.execute(query)
